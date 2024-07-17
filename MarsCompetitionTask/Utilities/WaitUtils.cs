@@ -17,6 +17,7 @@ namespace MarsCompetitionTask.Utilities
             By by = GetBy(locatorType, locatorValue);
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(seconds));
             wait.Until(ExpectedConditions.ElementToBeClickable(by));
+           
         }
 
         public static void WaitToBeVisible(IWebDriver driver, string locatorType, string locatorValue, int seconds)

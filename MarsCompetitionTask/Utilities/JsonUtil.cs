@@ -10,7 +10,6 @@ namespace MarsCompetitionTask.Utilities
 {
     public class JsonUtil
     {
-
         public static List<T> ReadJsonData<T>(string jsonDataFile)
         {
             string jsonFilePath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"C:\GitProjects\MarsCompetitionProj\MarsCompetitionTask\MarsCompetitionTask\bin\Debug\net8.0\JsonData\" + jsonDataFile);
@@ -19,9 +18,6 @@ namespace MarsCompetitionTask.Utilities
             List<T> values = JsonConvert.DeserializeObject<List<T>>(jsonData);
             return values;
         }
-
     }
-
-
 }
 

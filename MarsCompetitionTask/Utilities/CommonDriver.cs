@@ -1,22 +1,63 @@
-﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Chrome;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AventStack.ExtentReports;
+using AventStack.ExtentReports.Reporter;
+using MarsCompetitionTask.Pages;
+using NUnit.Framework;
+using OpenQA.Selenium;
+using OpenQA.Selenium.Firefox;
 
 namespace MarsCompetitionTask.Utilities
 {
     public class CommonDriver
     {
         public static IWebDriver driver;
+        public static ExtentReports extent;
+        public static ExtentTest test;
+        LoginPage loginPageObj;
 
+        [OneTimeSetUp]
+        public void ExtentReportSetup()
+        {
+            try
+            {
+                var htmlReporter = new ExtentHtmlReporter("C:\\GitProjects\\MarsCompetitionProj\\MarsCompetitionTask\\MarsCompetitionTask\\Reports\\");
+                extent = new ExtentReports();
+                extent.AttachReporter(htmlReporter);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        [SetUp]
         public void BrowserSetup()
         {
-            driver = new ChromeDriver();
+            driver = new FirefoxDriver();
             driver.Manage().Window.Maximize();
-            driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(5);
+            loginPageObj = new LoginPage();
+            loginPageObj.LoginActions();
+            var testName = TestContext.CurrentContext.Test.Name;
+            test = extent.CreateTest(testName);
+        }
+
+        [TearDown]
+        public void CloseTestrun()
+        {
+            driver.Quit();
+        }
+        // }
+        public MediaEntityModelProvider CaptureScreenshot(string screenShotName)
+        {
+            var screenShot = ((ITakesScreenshot)driver).GetScreenshot().AsBase64EncodedString;
+            return MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenShot, screenShotName).Build();
+        }
+
+        [OneTimeTearDown]
+        public void TeardownReport()
+        {
+            extent.Flush();
+
         }
     }
 }
+

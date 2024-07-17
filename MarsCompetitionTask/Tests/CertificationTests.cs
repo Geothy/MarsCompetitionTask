@@ -1,4 +1,5 @@
-﻿using MarsCompetitionTask.Models;
+﻿using AventStack.ExtentReports;
+using MarsCompetitionTask.Models;
 using MarsCompetitionTask.Pages;
 using MarsCompetitionTask.Utilities;
 using NUnit.Framework;
@@ -11,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace MarsCompetitionTask.Tests
 {
+    [TestFixture]
     public class CertificationTests:CommonDriver
     {
-        LoginPage loginPageObj;
         ProfileHomePage profileHomePageObj;
         CertificationPage certificationPageObj;
 
@@ -23,31 +24,17 @@ namespace MarsCompetitionTask.Tests
         string popUpMsg2 = "This information is already exist.";
         string popUpMsg3 = "Duplicated data";
         string popUpMsg4 = "Please enter Certification Name, Certification From and Certification Year";
-        string popUpMsg5 = "has been updated to your certification";
-        
+        string popUpMsg5 = "has been updated to your certification";        
         string popUpMsg6 = "has been deleted from your certification";
-
-
-
         public CertificationTests()
         {
-            loginPageObj = new LoginPage();
             profileHomePageObj = new ProfileHomePage();
             certificationPageObj = new CertificationPage();
         }
-
-        [SetUp]
-        public void SetupEducation()
-        {
-            BrowserSetup();
-            loginPageObj.LoginActions(driver, "geothy@gmail.com", "7geothy*");
-            profileHomePageObj.VerifyLoggedInUser(driver);
-            profileHomePageObj.NavigateToCerticationPanel();
-
-        }
-        [Test, Order(1), Description("This test adds a new entry in education feature")]
+        [Test, Order(1), Description("This test adds a new entry in Certification feature")]
         public void TestAddCertification()
         {
+            profileHomePageObj.NavigateToCerticationPanel();
             certificationPageObj.ClearData();
             string addCertFile = "AddCertificationData.json";
             List<CertificationModel> AddCertData = JsonUtil.ReadJsonData<CertificationModel>(addCertFile);
@@ -56,22 +43,35 @@ namespace MarsCompetitionTask.Tests
                 string certificationName = item.CertificationName;
                 string certificationFrom = item.CertificationFrom;
                 string certificationYr = item.CertificationYear;
-
                 string cnm = certificationPageObj.AddCertification(certificationName, certificationFrom, certificationYr);
                 string certPop = cnm + " has been added to your certification";
                 string popupMsgBox = popupMsg.Text;
                 Console.WriteLine(popupMsgBox);
                 Assert.That(popupMsgBox, Is.EqualTo(certPop).Or.EqualTo(popUpMsg1).Or.EqualTo(popUpMsg2).Or.EqualTo(popUpMsg3).Or.EqualTo(popUpMsg4));
+                var status = TestContext.CurrentContext.Result.Outcome.Status;
+                var mediaEntity = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
                 if ((popupMsgBox == popUpMsg2) || (popupMsgBox == popUpMsg3) || (popupMsgBox == popUpMsg4))
                 {
+                    test.Log(Status.Info, "Entered Invalid Data",mediaEntity);
                     cancelButton.Click();
-
                 }
+                else if(popupMsgBox==certPop || popupMsgBox==popUpMsg1)
+                {
+                    test.Log(Status.Pass, "Valid Certification Data Entered",mediaEntity);
+                } 
+                else
+                {
+                    test.Log(Status.Fail, "Test Failed:{TestContext.CurrentContext.Result.Message}");
+                }
+                Thread.Sleep(1000);
             }
+            var ssAddCertAfterTest = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
+            test.Log(Status.Pass, "Adding Certification Test Passed",ssAddCertAfterTest);
         }
-        [Test, Order(2), Description("This test updates in education feature")]
+        [Test, Order(2), Description("This test updates in Certification feature")]
         public void TestEditCertification()
         {
+            profileHomePageObj.NavigateToCerticationPanel();
             string editCertFile = "EditCertificationData.json";
             List<CertificationModel> EditCertData = JsonUtil.ReadJsonData<CertificationModel>(editCertFile);
             foreach (var item in EditCertData)
@@ -85,16 +85,25 @@ namespace MarsCompetitionTask.Tests
                 string editcertPop = edtcnm + " has been updated to your certification";
                 Console.WriteLine(editedPopupMsgBox);
                 Assert.That(editedPopupMsgBox, Is.EqualTo(editcertPop).Or.EqualTo(popUpMsg2).Or.EqualTo(popUpMsg3).Or.EqualTo(popUpMsg4).Or.EqualTo(popUpMsg5));
+                var status = TestContext.CurrentContext.Result.Outcome.Status;
+                var mediaEntity = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
                 if ((editedPopupMsgBox == popUpMsg2) || (editedPopupMsgBox == popUpMsg3) || (editedPopupMsgBox == popUpMsg4))
                 {
+                    test.Log(Status.Info, "Entered Invalid Data", mediaEntity);
                     cancelButton.Click();
-
+                }
+                else
+                {
+                    test.Log(Status.Info, "Valid Certification Data Entered", mediaEntity);
                 }
             }
+            var ssEditCertAfterTest = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
+            test.Log(Status.Pass, "Editing Certification Test Passed",ssEditCertAfterTest);
         }
-        [Test, Order(3), Description("This test deletes in education feature")]
+        [Test, Order(3), Description("This test deletes in Certification feature")]
         public void TestDeleteCertification()
         {
+            profileHomePageObj.NavigateToCerticationPanel();
             string deleteCertFile = "DeleteCertificationData.json";
             List<CertificationModel> DeleteCertData = JsonUtil.ReadJsonData<CertificationModel>(deleteCertFile);
             foreach (var item in DeleteCertData)
@@ -108,15 +117,12 @@ namespace MarsCompetitionTask.Tests
                 // WaitUtils.WaitToBeVisible(driver,"Name", "certificationName", 10);
                 string deleteCertPop = deleteCertName + " has been deleted from your certification";
                 Assert.That(deletePopupMsgBox, Is.EqualTo(deleteCertPop).Or.EqualTo(popUpMsg6));
+                var status = TestContext.CurrentContext.Result.Outcome.Status;
+                var mediaEntity = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
+                test.Log(Status.Info, "Deleted Certification", mediaEntity);
             }
-
-        }
-        [TearDown]
-
-        public void CloseTestrun()
-        {
-            driver.Quit();
-
+            var ssDeleteCertAfterTest = CaptureScreenshot(TestContext.CurrentContext.Test.Name);            
+            test.Log(Status.Pass, "Deleting Certification Test Passed",ssDeleteCertAfterTest);
         }
     }
 }

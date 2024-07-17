@@ -27,16 +27,53 @@ namespace MarsCompetitionTask.Pages
         private static IWebElement updateEduButton => driver.FindElement(By.XPath("//input[@value='Update']"));
 
         private static IWebElement deleteEducation => driver.FindElement(By.CssSelector("i[class='remove icon']"));
+        /*
 
+                public void ClearData()
+                {
+                    try
+                    {
+                        //var deleteButton = driver.FindElements(By.CssSelector("i[class='remove icon']"));
+                        var deleteButton = driver.FindElements(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[4]/div/div[2]/div/table/tbody/tr/td[6]/span[2]/i"));
+                        foreach (var button in deleteButton)
+                        {
+                             button.Click();                    
+                        }
+                    }
+                    catch (NoSuchElementException)
+                    {
+                        Console.WriteLine("Nothing to delete");
+                    }
 
+                }*/
         public void ClearData()
         {
             try
             {
-                var deleteButton = driver.FindElements(By.CssSelector("i[class='remove icon']"));
-                foreach (var button in deleteButton)
+                IWebElement deleteButton = driver.FindElement(By.CssSelector("i[class='remove icon']"));
+                WaitUtils.WaitToBeClickable(driver, "CssSelector", "i[class='remove icon']", 100);
+                var delButton = driver.FindElements(By.CssSelector("i[class='remove icon']"));
+
+                foreach (var button in delButton)
                 {
+                    Thread.Sleep(100);
                     button.Click();
+
+                }
+                Thread.Sleep(100);
+            }
+            catch (StaleElementReferenceException e)
+            {
+
+                IWebElement deleteButton = driver.FindElement(By.CssSelector("i[class='remove icon']"));
+                WaitUtils.WaitToBeClickable(driver, "CssSelector", "i[class='remove icon']", 100);
+                var delButton = driver.FindElements(By.CssSelector("i[class='remove icon']"));
+
+                foreach (var button in delButton)
+                {
+                    Thread.Sleep(100);
+                    button.Click();
+
                 }
             }
             catch (NoSuchElementException)
@@ -49,6 +86,7 @@ namespace MarsCompetitionTask.Pages
         {
             //Adding Education 
             addNewEduBtn.Click();
+            Thread.Sleep(100);
             addInstName.SendKeys(university);
             addDegree.SendKeys(degree);
             addCountry.Click();
