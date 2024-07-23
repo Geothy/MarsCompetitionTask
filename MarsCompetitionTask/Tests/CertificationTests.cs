@@ -17,7 +17,6 @@ namespace MarsCompetitionTask.Tests
     {
         ProfileHomePage profileHomePageObj;
         CertificationPage certificationPageObj;
-
         private static IWebElement popupMsg => driver.FindElement(By.XPath("//div[@class='ns-box-inner']"));
         private static IWebElement cancelButton => driver.FindElement(By.XPath("//input[@value='Cancel']"));
         string popUpMsg1 = "has been added to your certification";
@@ -35,7 +34,6 @@ namespace MarsCompetitionTask.Tests
         public void TestAddCertification()
         {
             profileHomePageObj.NavigateToCerticationPanel();
-            certificationPageObj.ClearData();
             string addCertFile = "AddCertificationData.json";
             List<CertificationModel> AddCertData = JsonUtil.ReadJsonData<CertificationModel>(addCertFile);
             foreach (var item in AddCertData)
@@ -61,7 +59,7 @@ namespace MarsCompetitionTask.Tests
                 } 
                 else
                 {
-                    test.Log(Status.Fail, "Test Failed:{TestContext.CurrentContext.Result.Message}");
+                    test.Log(Status.Fail, "Test Failed"+TestContext.CurrentContext.Result.Message);
                 }
                 Thread.Sleep(1000);
             }
@@ -72,6 +70,7 @@ namespace MarsCompetitionTask.Tests
         public void TestEditCertification()
         {
             profileHomePageObj.NavigateToCerticationPanel();
+            TestAddCertification();
             string editCertFile = "EditCertificationData.json";
             List<CertificationModel> EditCertData = JsonUtil.ReadJsonData<CertificationModel>(editCertFile);
             foreach (var item in EditCertData)
@@ -92,9 +91,13 @@ namespace MarsCompetitionTask.Tests
                     test.Log(Status.Info, "Entered Invalid Data", mediaEntity);
                     cancelButton.Click();
                 }
-                else
+                else if (editedPopupMsgBox == editcertPop)
                 {
                     test.Log(Status.Info, "Valid Certification Data Entered", mediaEntity);
+                }
+                else
+                {
+                    test.Log(Status.Fail, "Test Failed"+TestContext.CurrentContext.Result.Message);
                 }
             }
             var ssEditCertAfterTest = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
@@ -104,6 +107,7 @@ namespace MarsCompetitionTask.Tests
         public void TestDeleteCertification()
         {
             profileHomePageObj.NavigateToCerticationPanel();
+            TestAddCertification();
             string deleteCertFile = "DeleteCertificationData.json";
             List<CertificationModel> DeleteCertData = JsonUtil.ReadJsonData<CertificationModel>(deleteCertFile);
             foreach (var item in DeleteCertData)
@@ -119,7 +123,14 @@ namespace MarsCompetitionTask.Tests
                 Assert.That(deletePopupMsgBox, Is.EqualTo(deleteCertPop).Or.EqualTo(popUpMsg6));
                 var status = TestContext.CurrentContext.Result.Outcome.Status;
                 var mediaEntity = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
-                test.Log(Status.Info, "Deleted Certification", mediaEntity);
+                if(deletePopupMsgBox == deleteCertPop|| deletePopupMsgBox==popUpMsg6)
+                {
+                    test.Log(Status.Pass, "Deleted Certification", mediaEntity);
+                }
+                else
+                {
+                     test.Log(Status.Fail, "Test Failed"+ TestContext.CurrentContext.Result.Message);
+                }                
             }
             var ssDeleteCertAfterTest = CaptureScreenshot(TestContext.CurrentContext.Test.Name);            
             test.Log(Status.Pass, "Deleting Certification Test Passed",ssDeleteCertAfterTest);

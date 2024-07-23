@@ -13,7 +13,7 @@ namespace MarsCompetitionTask.Utilities
         public static ExtentReports extent;
         public static ExtentTest test;
         LoginPage loginPageObj;
-
+       
         [OneTimeSetUp]
         public void ExtentReportSetup()
         {
@@ -28,7 +28,6 @@ namespace MarsCompetitionTask.Utilities
                 Console.WriteLine(e.ToString());
             }
         }
-
         [SetUp]
         public void BrowserSetup()
         {
@@ -39,19 +38,45 @@ namespace MarsCompetitionTask.Utilities
             var testName = TestContext.CurrentContext.Test.Name;
             test = extent.CreateTest(testName);
         }
-
+        public void ClearData()
+        {
+            try
+            {               
+                var delEButton = driver.FindElements(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[4]/div/div[2]/div/table/tbody/tr/td[6]/span[2]/i"));
+                foreach (var button in delEButton)
+                {
+                    Thread.Sleep(100);
+                    button.Click();
+                }
+                Thread.Sleep(100);
+            }
+           
+            catch (StaleElementReferenceException e)
+            {
+                var delButton = driver.FindElements(By.XPath("//*[@id=\"account-profile-section\"]/div/section[2]/div/div/div/div[3]/form/div[4]/div/div[2]/div/table/tbody/tr/td[6]/span[2]/i"));
+                foreach (var button in delButton)
+                {
+                    Thread.Sleep(100);
+                    button.Click();
+                }
+            }
+            catch (NoSuchElementException)
+            {
+                Console.WriteLine("Nothing to delete");
+            }
+        }
         [TearDown]
         public void CloseTestrun()
         {
+            ClearData();
             driver.Quit();
         }
-        // }
+       
         public MediaEntityModelProvider CaptureScreenshot(string screenShotName)
         {
             var screenShot = ((ITakesScreenshot)driver).GetScreenshot().AsBase64EncodedString;
             return MediaEntityBuilder.CreateScreenCaptureFromBase64String(screenShot, screenShotName).Build();
         }
-
         [OneTimeTearDown]
         public void TeardownReport()
         {

@@ -8,6 +8,7 @@ using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
 using OpenQA.Selenium.DevTools.V125.HeadlessExperimental;
 using RazorEngine.Compilation.ImpromptuInterface;
+using System.Diagnostics.Metrics;
 using System.Drawing;
 using System.Runtime.Intrinsics.X86;
 
@@ -18,7 +19,6 @@ namespace MarsCompetitionTask.Tests
     {
         ProfileHomePage profileHomePageObj;
         EducationPage educationPageObj;
-
         private static IWebElement popupMsg => driver.FindElement(By.XPath("//div[@class='ns-box-inner']"));
         private static IWebElement cancelButton => driver.FindElement(By.XPath("//input[@value='Cancel']"));
         string popUpMsg1 = "Education has been added";
@@ -37,7 +37,6 @@ namespace MarsCompetitionTask.Tests
         public void TestAddEducation()
         {
             profileHomePageObj.NavigateToEducationPanel();
-            educationPageObj.ClearData();
             string addEduFile = "AddEducationData.json";
             List<EducationModel> AddEduData = JsonUtil.ReadJsonData<EducationModel>(addEduFile);
             foreach (var item in AddEduData)
@@ -60,9 +59,13 @@ namespace MarsCompetitionTask.Tests
                     test.Log(Status.Info, "Invalid Data Entered", mediaEntity);
                     cancelButton.Click();
                 }
-                else
+                else if(popupMsgBox==popUpMsg1)
                 {
                     test.Log(Status.Pass, "Valid Education Data Entered", mediaEntity);
+                }
+                else
+                {
+                    test.Log(Status.Fail, "Test Failed:{TestContext.CurrentContext.Result.Message}");
                 }
                 Thread.Sleep(1000);
             }
@@ -74,6 +77,7 @@ namespace MarsCompetitionTask.Tests
         public void TestEditEducation()
         {
             profileHomePageObj.NavigateToEducationPanel();
+            TestAddEducation();
             string editEduFile = "EditEducationData.json";
             List<EducationModel> EditEduData = JsonUtil.ReadJsonData<EducationModel>(editEduFile);
             foreach (var item in EditEduData)
@@ -96,9 +100,13 @@ namespace MarsCompetitionTask.Tests
                     test.Log(Status.Info, "Entered Invalid Data", mediaEntity);
                     cancelButton.Click();
                 }
-                else
+                else if (editpopupMsgBox == popUpMsg5)
                 {
                     test.Log(Status.Pass, "Valid Data Entered", mediaEntity);
+                }
+                else
+                {
+                    test.Log(Status.Fail, "Test Failed:{TestContext.CurrentContext.Result.Message}");
                 }
                 Thread.Sleep(3000);
             }
@@ -110,6 +118,7 @@ namespace MarsCompetitionTask.Tests
         public void TestDeleteEducation()
         {
             profileHomePageObj.NavigateToEducationPanel();
+            TestAddEducation();
             string deleteEduFile = "DeleteEducationData.json";
             List<EducationModel> DeleteEduData = JsonUtil.ReadJsonData<EducationModel>(deleteEduFile);
             foreach (var item in DeleteEduData)
@@ -127,7 +136,14 @@ namespace MarsCompetitionTask.Tests
                 Assert.That(deletepopupMsgBox, Is.EqualTo(popUpMsg7));
                 var status = TestContext.CurrentContext.Result.Outcome.Status;
                 var mediaEntity = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
-                test.Log(Status.Info, "Deleted", mediaEntity);
+                if (deletepopupMsgBox == popUpMsg7)
+                {
+                    test.Log(Status.Pass, "Deletion Successfull", mediaEntity);
+                }
+                else
+                {
+                    test.Log(Status.Fail, "Test Failed:{TestContext.CurrentContext.Result.Message}");
+                }
                 Thread.Sleep(1000);
             }
             var ssDeleteAfterTest = CaptureScreenshot(TestContext.CurrentContext.Test.Name);

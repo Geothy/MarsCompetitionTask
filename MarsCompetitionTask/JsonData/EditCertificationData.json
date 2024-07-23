@@ -1,6 +1,6 @@
 ﻿[
   {
-    "CertificationName": "Abcd",
+    "CertificationName": "abcd",
     "CertificationFrom": "xyz",
     "CertificationYear": "2016"
   },
@@ -10,7 +10,7 @@
     "CertificationYear": "2016"
   },
   {
-    "CertificationName": "  ",
+    "CertificationName": "..",
     "CertificationFrom": "xc",
     "CertificationYear": "2016"
   },
