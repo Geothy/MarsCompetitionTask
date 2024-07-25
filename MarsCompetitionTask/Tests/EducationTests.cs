@@ -59,7 +59,7 @@ namespace MarsCompetitionTask.Tests
                     test.Log(Status.Info, "Invalid Data Entered", mediaEntity);
                     cancelButton.Click();
                 }
-                else if(popupMsgBox==popUpMsg1)
+                else if (popupMsgBox == popUpMsg1)
                 {
                     test.Log(Status.Pass, "Valid Education Data Entered", mediaEntity);
                 }
@@ -76,7 +76,6 @@ namespace MarsCompetitionTask.Tests
         [Test, Order(2), Description("This test updates in education feature")]
         public void TestEditEducation()
         {
-            profileHomePageObj.NavigateToEducationPanel();
             TestAddEducation();
             string editEduFile = "EditEducationData.json";
             List<EducationModel> EditEduData = JsonUtil.ReadJsonData<EducationModel>(editEduFile);
@@ -117,7 +116,6 @@ namespace MarsCompetitionTask.Tests
         [Test, Order(3), Description("This test deletes in education feature")]
         public void TestDeleteEducation()
         {
-            profileHomePageObj.NavigateToEducationPanel();
             TestAddEducation();
             string deleteEduFile = "DeleteEducationData.json";
             List<EducationModel> DeleteEduData = JsonUtil.ReadJsonData<EducationModel>(deleteEduFile);
@@ -144,7 +142,7 @@ namespace MarsCompetitionTask.Tests
                 {
                     test.Log(Status.Fail, "Test Failed:{TestContext.CurrentContext.Result.Message}");
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(2000);
             }
             var ssDeleteAfterTest = CaptureScreenshot(TestContext.CurrentContext.Test.Name);
             test.Log(Status.Pass, "Deleting Education Test Passed", ssDeleteAfterTest);

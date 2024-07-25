@@ -13,14 +13,12 @@ namespace MarsCompetitionTask.Pages
         {
             WaitUtils.WaitToBeClickable(driver, "XPath", "//a[text()='Education']", 100);
             educationTab.Click();
-            ClearData();
             Thread.Sleep(3000);
         }
         public void NavigateToCerticationPanel()
         {
             WaitUtils.WaitToBeClickable(driver, "XPath", "//a[text()='Certifications']", 100);
             certificationTab.Click();
-            ClearCertData();
             Thread.Sleep(3000);
         }
         public void ClearCertData()
