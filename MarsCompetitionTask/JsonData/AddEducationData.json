@@ -1,0 +1,38 @@
+﻿[
+  {
+    "Country": "Belarus",
+    "University": "NU",
+    "Title": "B.A",
+    "Degree": "CT",
+    "GraduationYear": "2014"
+  },
+
+  {
+    "Country": "India",
+    "University": "",
+    "Title": "B.Tech",
+    "Degree": "CT",
+    "GraduationYear": "2000"
+  },
+  {
+    "Country": "India",
+    "University": " ",
+    "Title": "B.Tech",
+    "Degree": "CT",
+    "GraduationYear": "2000"
+  },
+  {
+    "Country": "India",
+    "University": "RCERT",
+    "Title": "B.Tech",
+    "Degree": "CT",
+    "GraduationYear": "2000"
+  },
+  {
+    "Country": "India",
+    "University": "12345",
+    "Title": "B.Tech",
+    "Degree": "76.26",
+    "GraduationYear": "2000"
+  }
+]

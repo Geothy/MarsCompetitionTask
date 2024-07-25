@@ -1,0 +1,22 @@
+﻿[
+  {
+    "CertificationName": "abcd",
+    "CertificationFrom": "xyz",
+    "CertificationYear": "2016"
+  },
+  {
+    "CertificationName": "",
+    "CertificationFrom": "",
+    "CertificationYear": "2016"
+  },
+  {
+    "CertificationName": "..",
+    "CertificationFrom": "xc",
+    "CertificationYear": "2016"
+  },
+  {
+    "CertificationName": "ISTQB",
+    "CertificationFrom": "xyz",
+    "CertificationYear": "2020"
+  }
+]

@@ -1,0 +1,17 @@
+﻿[
+  {
+    "CertificationName": "ISTQB",
+    "CertificationFrom": "xyz",
+    "CertificationYear": "2020"
+  },
+  {
+    "CertificationName": "ISTQB",
+    "CertificationFrom": "India",
+    "CertificationYear": "2014"
+  },
+  {
+    "CertificationName": "1234",
+    "CertificationFrom": "5678",
+    "CertificationYear": "2014"
+  }
+]
